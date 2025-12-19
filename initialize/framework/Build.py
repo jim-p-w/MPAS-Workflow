@@ -47,8 +47,11 @@ class Build(Component):
         self.variablesWithDefaults['mpas bundle'] = \
           ['/glade/derecho/scratch/jwittig/repos-s/mpas-bundle-cron/build-gnu-1p_latest', str] ## develop
 
-      self.variablesWithDefaults['bundle compiler used'] = ['gnu-cray', str,
-        ['gnu-cray', 'intel-cray']]
+      if config._bundle_compiler != None:
+        self.variablesWithDefaults['bundle compiler used'] = [config._bundle_compiler, str]
+      else:
+        self.variablesWithDefaults['bundle compiler used'] = ['gnu-cray', str,
+          ['gnu-cray', 'intel-cray']]
       self.variablesWithDefaults['forecast directory'] = ['bundle', str]
 
       # Ungrib
@@ -119,6 +122,7 @@ class Build(Component):
 
       # either use forecast executable from the bundle or a separate MPAS-Atmosphere build
       self.log('self[mpas bundle] ' + self['mpas bundle'], level=self.MSG_DEBUG)
+      self.log('self[bundle compiler used] ' + self['bundle compiler used'], level=self.MSG_DEBUG)
       self.log('self[forecast directory] ' + self['forecast directory'], level=self.MSG_DEBUG)
       if self['forecast directory'] == 'bundle':
         self._set('ForecastBuildDir', self['mpas bundle']+'/bin')

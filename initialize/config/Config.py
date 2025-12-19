@@ -19,16 +19,20 @@ class Config(Logger):
       filename: str=None,
       bundle_dir: str=None,
       suffix: str=None,
+      bundle_compiler: str=None,
       defaultsFile: str = None,
     ):
 
    super().__init__()
+
    if filename is not None:
      with open(filename) as file:
        self._table = yaml.load(file, Loader=yaml.FullLoader)
 
+   self._bundle_compiler = bundle_compiler
    self._bundle_dir = bundle_dir
    self._suffix = suffix
+   self.log('Config '+ str(self), level=self.MSG_DEBUG)
    if defaultsFile is not None:
      with open(defaultsFile) as file:
        self._defaults = yaml.load(file, Loader=yaml.FullLoader)
@@ -36,9 +40,10 @@ class Config(Logger):
      self._defaults = {}
 
   def __str__(self):
+    bc =  (self._bundle_compiler if self._bundle_compiler != None else 'None')
     bd =  (self._bundle_dir if self._bundle_dir != None else 'None')
     suffix =  (self._suffix if self._suffix != None else 'None')
-    return 'bundle_dir:' + bd + ' suffix:' + suffix
+    return 'bundle_compiler:' + bc + ' bundle_dir:' + bd + ' suffix:' + suffix
 
   def extract(self, subKey: str, defaultsFile:str = None):
     tab = deepcopy(self._table.get(subKey, {}))
